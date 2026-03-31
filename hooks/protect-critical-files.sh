@@ -10,7 +10,19 @@
 # Exit code 0 = warn only. Change to exit 2 to hard-block.
 # ============================================================================
 
-INPUT="$1"
+# Read JSON input from stdin (Claude Code hook system)
+INPUT=$(cat)
+
+FILE_PATH=$(echo "$INPUT" | python3 -c "
+import sys, json
+try:
+    d = json.load(sys.stdin)
+    ti = d.get('tool_input', {})
+    # FileWrite uses 'file_path', FileEdit uses 'file_path' too
+    print(ti.get('file_path', ti.get('path', '')))
+except:
+    print('')
+" 2>/dev/null)
 
 # ── Configure your protected patterns ──────────────────────────────────────
 PROTECTED_PATTERNS=(
@@ -23,11 +35,12 @@ PROTECTED_PATTERNS=(
   "migration"
   "schema.prisma"
   ".github/workflows"
+  "CLAUDE.md"
 )
 
 for pattern in "${PROTECTED_PATTERNS[@]}"; do
-  if echo "$INPUT" | grep -qi "$pattern"; then
-    echo "WARNING: Modifying protected file matching '$pattern'" >&2
+  if echo "$FILE_PATH" | grep -qi "$pattern"; then
+    echo "WARNING: Modifying protected file matching '$pattern': $FILE_PATH" >&2
     echo "Make sure this change is intentional." >&2
     # To hard-block instead of warn, uncomment:
     # exit 2
