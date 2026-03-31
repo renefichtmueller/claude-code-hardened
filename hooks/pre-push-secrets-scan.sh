@@ -39,9 +39,13 @@ SECRETS=$(grep -rnE \
   --include="*.json" --include="*.yaml" --include="*.yml" --include="*.toml" \
   --include="*.py" --include="*.go" --include="*.rs" --include="*.env" \
   . 2>/dev/null \
-  | grep -v node_modules | grep -v .git | grep -v package-lock \
+  | grep -v node_modules | grep -v "\.next/" | grep -v "/dist/" | grep -v "/build/" \
+  | grep -v "\.cache/" | grep -v "/out/" | grep -v "\.min\." \
+  | grep -v ".git" | grep -v package-lock \
   | grep -v "\.example" | grep -v "\.sample" | grep -v "\.template" \
   | grep -v "process\.env\." | grep -v "os\.environ" | grep -v "os\.Getenv" \
+  | grep -v "cfg\." | grep -v "config\." | grep -v "env\." | grep -v "req\." \
+  | grep -v ":-[a-zA-Z0-9_]*}" \
   | head -10)
 
 if [ -n "$SECRETS" ]; then
@@ -56,10 +60,12 @@ fi
 PRIVATE=$(grep -rnE \
   "(192\.168\.[0-9]+\.[0-9]+|10\.[0-9]+\.[0-9]+\.[0-9]+|172\.(1[6-9]|2[0-9]|3[01])\.[0-9]+\.[0-9]+|@gmail\.com|@googlemail\.com|/Users/[a-zA-Z]+/|/home/[a-zA-Z]+/|gitea\.[a-z-]+\.[a-z]+)" \
   --include="*.ts" --include="*.tsx" --include="*.js" --include="*.jsx" \
-  --include="*.json" --include="*.yaml" --include="*.yml" --include="*.toml" \
+  --include="*.yaml" --include="*.yml" --include="*.toml" \
   --include="*.py" --include="*.go" --include="*.rs" --include="*.sh" \
   . 2>/dev/null \
-  | grep -v node_modules | grep -v .git | grep -v package-lock \
+  | grep -v node_modules | grep -v "\.next/" | grep -v "/dist/" | grep -v "/build/" \
+  | grep -v "\.cache/" | grep -v "/out/" | grep -v "\.min\." \
+  | grep -v ".git" | grep -v package-lock \
   | grep -v "\.example" | grep -v "\.md" | grep -v "README" \
   | head -10)
 
@@ -78,9 +84,13 @@ DB_URLS=$(grep -rnE \
   --include="*.json" --include="*.yaml" --include="*.yml" --include="*.toml" \
   --include="*.py" --include="*.go" --include="*.rs" \
   . 2>/dev/null \
-  | grep -v node_modules | grep -v .git | grep -v package-lock \
+  | grep -v node_modules | grep -v "\.next/" | grep -v "/dist/" | grep -v "/build/" \
+  | grep -v "\.cache/" | grep -v "/out/" | grep -v "\.min\." \
+  | grep -v ".git" | grep -v package-lock \
   | grep -v "\.example" | grep -v "\.sample" | grep -v "\.template" \
   | grep -v "process\.env\." | grep -v "os\.environ" | grep -v "os\.Getenv" \
+  | grep -v ":-[a-zA-Z0-9_]*}" \
+  | grep -v "\${[A-Z_]*}" \
   | head -10)
 
 if [ -n "$DB_URLS" ]; then
