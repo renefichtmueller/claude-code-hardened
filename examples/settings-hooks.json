@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash ~/.claude/hooks/block-no-verify.sh \"$TOOL_INPUT\""
+            "command": "cat | bash ~/.claude/hooks/block-no-verify.sh"
           }
         ]
       },
@@ -15,7 +15,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash ~/.claude/hooks/pre-push-secrets-scan.sh \"$TOOL_INPUT\""
+            "command": "cat | bash ~/.claude/hooks/pre-push-secrets-scan.sh"
           }
         ]
       },
@@ -24,27 +24,46 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash ~/.claude/hooks/enforce-branch-policy.sh \"$TOOL_INPUT\""
+            "command": "cat | bash ~/.claude/hooks/enforce-branch-policy.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cat | bash ~/.claude/hooks/enforce-gitea-first.sh"
           }
         ]
       }
     ],
     "PostToolUse": [
       {
-        "matcher": "Write|Edit",
+        "matcher": "FileWrite|FileEdit",
         "hooks": [
           {
             "type": "command",
-            "command": "bash ~/.claude/hooks/protect-critical-files.sh \"$TOOL_INPUT\""
+            "command": "cat | bash ~/.claude/hooks/protect-critical-files.sh"
           }
         ]
       },
       {
-        "matcher": "Write|Edit",
+        "matcher": "FileWrite|FileEdit",
         "hooks": [
           {
             "type": "command",
-            "command": "bash ~/.claude/hooks/post-edit-lint-reminder.sh \"$TOOL_INPUT\"",
+            "command": "cat | bash ~/.claude/hooks/post-edit-lint-reminder.sh",
+            "async": true
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cat | bash ~/.claude/hooks/changelog-reminder.sh",
             "async": true
           }
         ]
